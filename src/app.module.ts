@@ -13,9 +13,5 @@ import {ConfigModule} from "@nestjs/config";
   controllers: [LedgerController],
   providers: [FabricGatewayClient, LedgerService],
 })
-export class AppModule implements OnModuleInit {
-  constructor(private readonly fabric: FabricGatewayClient) {}
-  async onModuleInit() {
-    await this.fabric.init();
-  }
+export class AppModule {
 }
