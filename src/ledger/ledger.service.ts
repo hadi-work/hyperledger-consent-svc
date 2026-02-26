@@ -3,6 +3,7 @@ import { FabricGatewayClient } from '../fabric/fabric-gateway.client';
 import { CreateConsentEventDto } from './dto/create-consent-event.dto';
 import { createHash } from 'crypto';
 import { v4 as uuid } from 'uuid';
+import {unit8ArrayToJson} from "../core/helpers/object-converter.helper";
 
 function sha256(s: string) {
   return createHash('sha256').update(s).digest('hex');
@@ -27,7 +28,8 @@ export class LedgerService {
     // Determine previousEventId by reading latest from chain
     const contract = this.fabric.getContract();
     const latestBytes = await contract.evaluateTransaction('GetLatestConsent', consentRequestId);
-    const latest = latestBytes.length ? JSON.parse(latestBytes.toString()) : null;
+    // const latest = latestBytes.length ? JSON.parse(latestBytes.toString()) : null;
+    const latest = unit8ArrayToJson(latestBytes);
 
     const eventId = uuid();
 
@@ -44,7 +46,8 @@ export class LedgerService {
     };
 
     const resultBytes = await contract.submitTransaction('CreateConsentEvent', JSON.stringify(payload));
-    const result = JSON.parse(resultBytes.toString());
+    // const result = JSON.parse(resultBytes.toString());
+    const result = unit8ArrayToJson(resultBytes);
 
     return {
       ...result,
@@ -55,12 +58,15 @@ export class LedgerService {
   async getLatest(consentRequestId: string) {
     const contract = this.fabric.getContract();
     const bytes = await contract.evaluateTransaction('GetLatestConsent', consentRequestId);
-    return bytes.length ? JSON.parse(bytes.toString()) : null;
+
+    return unit8ArrayToJson(bytes);
+    // return bytes.length ? JSON.parse(bytes.toString()) : null;
   }
 
   async getHistory(consentRequestId: string) {
     const contract = this.fabric.getContract();
     const bytes = await contract.evaluateTransaction('GetConsentHistory', consentRequestId);
-    return bytes.length ? JSON.parse(bytes.toString()) : [];
+    return unit8ArrayToJson(bytes);
+    // return bytes.length ? JSON.parse(bytes.toString()) : [];
   }
 }
