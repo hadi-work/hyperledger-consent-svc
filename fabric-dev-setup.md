@@ -1,5 +1,3 @@
-Here is your documentation converted into a **clean, professional `.md` format** with proper headings, code blocks, and structure suitable for a **README or internal technical documentation**.
-
 ````markdown
 # Hyperledger Fabric Setup Guide – Consent Ledger
 
@@ -205,3 +203,90 @@ This setup performs the following:
 5. Deploys the **`consent-ledger` chaincode**
 6. Invokes and queries the chaincode for **consent events**
 
+---
+
+# Request
+
+### Post consent
+url: http://localhost:4500/ledger/consents/events
+
+```json
+{
+  "statusIndicator": "accepted",
+  "customerID": "NID-1234",
+  "participantID": "BANK-12",
+  "datetime": "2026-02-17T12:34:56.789Z",
+  "communicationChannel": "web",
+  "sharedKYCPart": ""
+}
+```
+
+Response:
+```json
+{
+  "eventId": "6ee56982-f23a-4b5b-b17a-85e6d8a9f315",
+  "consentRequestId": "57c0a6472e8c6dcbfefaa039e27341b567ecc9e8cee1670c1f1ef29ebfbf6b77",
+  "txId": "70e0cd81f5021ab1cef4e9e6ce559f7827f833a32544de30d8ffe07aa8c451a9",
+  "createdAt": "2026-02-26T10:53:08.000Z",
+  "sharedKycHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
+```
+
+
+### Get Latest Consent
+URL: http://localhost:4500/ledger/consents/{consentRequestId}/latest
+
+Response:
+```json
+{
+  "eventId": "39b29bcb-71bc-47be-bb99-060e7efa16d7",
+  "consentRequestId": "57c0a6472e8c6dcbfefaa039e27341b567ecc9e8cee1670c1f1ef29ebfbf6b77",
+  "statusIndicator": "revoked",
+  "customerID": "NID-1234",
+  "participantID": "BANK-12",
+  "datetime": "2026-02-17T12:34:56.789Z",
+  "communicationChannel": "web",
+  "sharedKycHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "previousEventId": "6ee56982-f23a-4b5b-b17a-85e6d8a9f315",
+  "createdAtTxId": "218ee4140f7be5280c416e217d537c9383d2a95851d812bbd69b83589fdbb451",
+  "createdAt": "2026-02-26T10:53:47.000Z",
+  "createdByMspId": "Org1MSP"
+}
+```
+
+
+### Get Consents History
+URL: http://localhost:4500/ledger/consents/{consentRequestId}/history
+
+Response:
+```json
+[
+  {
+    "eventId": "2bf0450b-e277-413d-a08b-f1e62847d0d3",
+    "consentRequestId": "f6e3d0ece078136702aed50703f0874c80991f952be62569da766d2ea2458f85",
+    "statusIndicator": "revoked",
+    "customerID": "NID-123",
+    "participantID": "BANK-1",
+    "datetime": "2026-02-17T12:34:56.789Z",
+    "communicationChannel": "web",
+    "sharedKycHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "previousEventId": "7d48aad6-84fc-47e1-a64d-e876620927dc",
+    "createdAtTxId": "a177249852d31948996980c206f46948d9082cbb7ddc75b27c85a43982fb31dd",
+    "createdAt": "2026-02-26T11:07:37.000Z",
+    "createdByMspId": "Org1MSP"
+  },
+  {
+    "eventId": "7d48aad6-84fc-47e1-a64d-e876620927dc",
+    "consentRequestId": "f6e3d0ece078136702aed50703f0874c80991f952be62569da766d2ea2458f85",
+    "statusIndicator": "accepted",
+    "customerID": "NID-123",
+    "participantID": "BANK-1",
+    "datetime": "2026-02-17T12:34:56.789Z",
+    "communicationChannel": "web",
+    "sharedKycHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "createdAtTxId": "5aed1fed178bb8322f8beb547de0da85abd964e553521319a84f57ba84af9752",
+    "createdAt": "2026-02-26T10:52:23.000Z",
+    "createdByMspId": "Org1MSP"
+  }
+]
+```
